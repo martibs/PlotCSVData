@@ -40,11 +40,9 @@ app.post('/login',function(req,res){
   res.end("yes");
 });
 
-app.listen(process.env.PORT || 3000)
+//app.listen(process.env.PORT || 3000)
 
-/*
 app.listen(3000,function(){
   console.log("Started on PORT 3000");
 })
 
-*/
