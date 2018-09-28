@@ -1,5 +1,11 @@
 //var myFile=$("#upload")[0].files[0];
-d3.csv('data.csv',function (data) {
+
+
+
+function loadShit(url1){
+
+
+d3.csv(url1.toString(),function (data) {
 // CSV section
   var body = d3.select('body')
   var selectData = d3.keys(data[0]);
@@ -170,3 +176,5 @@ d3.csv('data.csv',function (data) {
         .attr('cx',function (d) { return xScale(d[value]) })
   }
 })
+
+}

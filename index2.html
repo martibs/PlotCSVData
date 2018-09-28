@@ -12,5 +12,15 @@
   	</header>
     <!--<input type="file" id="upload"></input>-->
     <script type='text/javascript' src='script2.js'></script>
+    <input type="text" id="url" name="textbox"/>
+
+    <script>
+      function readUrl(){
+        var url = document.getElementById("url").value;
+        loadShit(url);
+      }
+    </script>
+
+    <button id="Load" onclick="readUrl()">Load Shit</button>
   </body>
 </html>
