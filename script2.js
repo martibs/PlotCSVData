@@ -1,11 +1,13 @@
-d3.csv('data2.csv',function (data) {
+//var myFile=$("#upload")[0].files[0];
+d3.csv('data.csv',function (data) {
 // CSV section
   var body = d3.select('body')
-  var selectData = [ { "text" : "Annualized Return" },
-                     { "text" : "Annualized Standard Deviation" },
-                     { "text" : "Maximum Drawdown" },
-                   ]
-
+  var selectData = d3.keys(data[0]);
+  var count=0;
+  for(var element in data[0]){
+    
+    count++;
+  }
   // Select X-axis Variable
   var span = body.append('span')
     .text('Select X-Axis variable: ')
@@ -16,8 +18,8 @@ d3.csv('data2.csv',function (data) {
       .data(selectData)
       .enter()
     .append('option')
-      .attr('value', function (d) { return d.text })
-      .text(function (d) { return d.text ;})
+      .attr('value', function (d) { return d })
+      .text(function (d) { return d ;})
   body.append('br')
 
   // Select Y-axis Variable
@@ -30,8 +32,8 @@ d3.csv('data2.csv',function (data) {
       .data(selectData)
       .enter()
     .append('option')
-      .attr('value', function (d) { return d.text })
-      .text(function (d) { return d.text ;})
+      .attr('value', function (d) { return d})
+      .text(function (d) { return d ;})
   body.append('br')
 
   // Variables
@@ -44,14 +46,14 @@ d3.csv('data2.csv',function (data) {
   var colorScale = d3.scale.category20()
   var xScale = d3.scale.linear()
     .domain([
-      d3.min([0,d3.min(data,function (d) { return d['Annualized Return'] })]),
-      d3.max([0,d3.max(data,function (d) { return d['Annualized Return'] })])
+      d3.min([0,d3.min(data,function (d) { return d})]),
+      d3.max([0,d3.max(data,function (d) { return d})])
       ])
     .range([0,w])
   var yScale = d3.scale.linear()
     .domain([
-      d3.min([0,d3.min(data,function (d) { return d['Annualized Return'] })]),
-      d3.max([0,d3.max(data,function (d) { return d['Annualized Return'] })])
+      d3.min([0,d3.min(data,function (d) { return d})]),
+      d3.max([0,d3.max(data,function (d) { return d})])
       ])
     .range([h,0])
   // SVG
@@ -77,8 +79,8 @@ d3.csv('data2.csv',function (data) {
       .data(data)
       .enter()
     .append('circle')
-      .attr('cx',function (d) { return xScale(d['Annualized Return']) })
-      .attr('cy',function (d) { return yScale(d['Annualized Return']) })
+      .attr('cx',function (d) { return xScale(d) })
+      .attr('cy',function (d) { return yScale(d) })
       .attr('r','10')
       .attr('stroke','black')
       .attr('stroke-width',1)
@@ -97,11 +99,11 @@ d3.csv('data2.csv',function (data) {
           .attr('r',10)
           .attr('stroke-width',1)
       })
-    .append('title') // Tooltip
+   /* .append('title') // Tooltip
       .text(function (d) { return d.variable +
                            '\nReturn: ' + formatPercent(d['Annualized Return']) +
                            '\nStd. Dev.: ' + formatPercent(d['Annualized Standard Deviation']) +
-                           '\nMax Drawdown: ' + formatPercent(d['Maximum Drawdown']) })
+                           '\nMax Drawdown: ' + formatPercent(d['Maximum Drawdown']) })*/
   // X-axis
   svg.append('g')
       .attr('class','axis')
