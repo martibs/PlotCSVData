@@ -4,51 +4,13 @@
     <title>Registration Form</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
 
 <!--    <link rel="stylesheet" type="text/css" href="style.css"> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
 
 <!--    <script src="index.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
     <!-- <script src="validation.js" type="text/javascript"></script> -->
 <script>
-  
-function validateEmail(email){
-  var regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  var result = regex.test(email);
-  return result;
-}
-
-function validatePassword(password){
-  var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-  var result = regex.test(password);
-  return result;
-}
-
-
-function validate() {
-  var $result = $("#result");
-  var email = $("#email").val();
-  var password = $("#password").val();
-  $result.text("");
-
-  if (validateEmail(email) && (validatePassword(password))) {
-    return true;
-
-  } else if(!validateEmail(email)){
-    $result.text("The email is not valid. It must contain a @ and a domain ending.");
-    $result.css("color", "red");
-
-  } else {
-    $result.text("The password is not valid. It must contain 8 characters, a capital letter and a number.");
-    $result.css("color", "red");
-  }
-  return false;
-}
 
 $(document).ready(function(){
   var user,pass,email;
@@ -68,6 +30,49 @@ $(document).ready(function(){
   });
 });
 </script>
+
+<script>
+//actual handler
+$("#submitbutton").on("click", function(){
+
+    //arguments
+    var myheader = $("#header").val() == "true";
+    var myfile = $("#csvfile")[0].files[0];
+        
+    if(!myfile){
+        alert("No file selected.");
+        return;
+    }
+
+    //disable the button during upload
+    $("#submitbutton").attr("disabled", "disabled");
+
+    //perform the request
+    var req = ocpu.call("read.csv", {
+        "file" : myfile,
+        "header" : myheader
+    }, function(session){
+        session.getConsole(function(outtxt){
+            $("#output").text(outtxt); 
+        });
+    });
+        
+    //if R returns an error, alert the error message
+    req.fail(function(){
+        alert("Server error: " + req.responseText);
+    });
+    
+    //after request complete, re-enable the button 
+    req.always(function(){
+        $("#submitbutton").removeAttr("disabled")
+    });        
+});    
+
+
+
+</script>
+
+
 <style type="text/css">
     body{
         color: #fff;
@@ -160,33 +165,23 @@ $(document).ready(function(){
 
   </head>
 <body>
-<div class="signup-form">
-    <form method="post">
-        <h2>Register</h2>
-        <p class="hint-text">Create your account. It's free and only takes a minute.</p>
-        <p id="result"></p>
-        
-        <div class="form-group">
-            <div class="col-xs-6"></div>
-        </div>
-        <div class="form-group">
-            <input type="text" id="user" class="form-control" name="first_name" placeholder="User" required="required">
-        </div>    
-        <div class="form-group">
-        
-            <input type="email" id="email" class="form-control" name="email" placeholder="Email" required="required">
-        </div>
-        <div class="form-group">
-            <input type="password" id="password" class="form-control" name="password" placeholder="Password" required="required">
-        </div>
-        <div class="form-group">
-            <button type="button" id="submit" value="Submit" class="btn btn-success btn-lg btn-block">Register Now</button>
-        </div>
-        <div class="form-group">
-            <a href="/admin">Link to admin site</a>
-        </div>
-    </form>
-</div>
+
+<h1>Upload csv files!</h1>
+<p>This site allows you to choose the csvdata to upload and displays it for you in different visualizations.</p>
+
+<b>CSV File</b> <input type="file" id="csvfile"> 
+<br />
+
+<b>Header</b> <select id="header">
+<option>true</option>
+<option>false</option>
+</select> 
+
+<br />
+<button id="submitbutton" type="button">read.csv</button>
+
+<pre><code id="output"></code></pre>
+
 </body>
 
 
