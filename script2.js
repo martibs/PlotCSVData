@@ -1,13 +1,14 @@
 //var myFile=$("#upload")[0].files[0];
 
-
+//d3.select("#chart").attr("align","center");
 
 function loadShit(url1){
 
 
 d3.csv(url1.toString(),function (data) {
 // CSV section
-  var body = d3.select('body')
+  var body = d3.select("#body").append("body")
+  // d3.select('body')
   var selectData = d3.keys(data[0]);
   var count=0;
   for(var element in data[0]){
@@ -15,7 +16,8 @@ d3.csv(url1.toString(),function (data) {
     count++;
   }
   // Select X-axis Variable
-  var span = body.append('span')
+  var span = d3.select("#span").append("span")
+  //body.append('span')
     .text('Select X-Axis variable: ')
   var yInput = body.append('select')
       .attr('id','xSelect')
@@ -29,7 +31,8 @@ d3.csv(url1.toString(),function (data) {
   body.append('br')
 
   // Select Y-axis Variable
-  var span = body.append('span')
+  var span = d3.select("#span").append("span")
+  //body.append('span')
       .text('Select Y-Axis variable: ')
   var yInput = body.append('select')
       .attr('id','ySelect')
@@ -43,10 +46,11 @@ d3.csv(url1.toString(),function (data) {
   body.append('br')
 
   // Variables
-  var body = d3.select('body')
+  var body = d3.select("#var").append("var")
+  //d3.select('body')
   var margin = { top: 50, right: 50, bottom: 50, left: 50 }
-  var h = 500 - margin.top - margin.bottom
-  var w = 500 - margin.left - margin.right
+  var h = 600 - margin.top - margin.bottom
+  var w = 600 - margin.left - margin.right
   var formatPercent = d3.format('.2%')
   // Scales
   var colorScale = d3.scale.category20()
@@ -63,7 +67,8 @@ d3.csv(url1.toString(),function (data) {
       ])
     .range([h,0])
   // SVG
-  var svg = body.append('svg')
+  var svg = d3.select("#svg").append("svg")
+  //body.append('svg')
       .attr('height',h + margin.top + margin.bottom)
       .attr('width',w + margin.left + margin.right)
     .append('g')
@@ -122,7 +127,7 @@ d3.csv(url1.toString(),function (data) {
       .attr('x',w)
       .attr('dy','.71em')
       .style('text-anchor','end')
-      .text('Annualized Return')
+      .text('')
   // Y-axis
   svg.append('g')
       .attr('class','axis')
@@ -135,14 +140,14 @@ d3.csv(url1.toString(),function (data) {
       .attr('y',5)
       .attr('dy','.71em')
       .style('text-anchor','end')
-      .text('Annualized Return')
+      .text('')
 
   function yChange() {
     var value = this.value // get the new y value
     yScale // change the yScale
       .domain([
         d3.min([0,d3.min(data,function (d) { return d[value] })]),
-        d3.max([0,d3.max(data,function (d) { return d[value] })])
+        d3.max([0,d3.max(data,function (d) { return d[value]*1.3 })])
         ])
     yAxis.scale(yScale) // change the yScale
     d3.select('#yAxis') // redraw the yAxis
@@ -152,7 +157,7 @@ d3.csv(url1.toString(),function (data) {
       .text(value)    
     d3.selectAll('circle') // move the circles
       .transition().duration(1000)
-      .delay(function (d,i) { return i*100})
+      .delay(function (d,i) { return i*20})
         .attr('cy',function (d) { return yScale(d[value]) })
   }
 
@@ -161,7 +166,7 @@ d3.csv(url1.toString(),function (data) {
     xScale // change the xScale
       .domain([
         d3.min([0,d3.min(data,function (d) { return d[value] })]),
-        d3.max([0,d3.max(data,function (d) { return d[value] })])
+        d3.max([0,d3.max(data,function (d) { return d[value]*1.3 })])
         ])
     xAxis.scale(xScale) // change the xScale
     d3.select('#xAxis') // redraw the xAxis
@@ -172,7 +177,7 @@ d3.csv(url1.toString(),function (data) {
       .text(value)
     d3.selectAll('circle') // move the circles
       .transition().duration(1000)
-      .delay(function (d,i) { return i*100})
+      .delay(function (d,i) { return i*20})
         .attr('cx',function (d) { return xScale(d[value]) })
   }
 })
