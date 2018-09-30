@@ -1,0 +1,16 @@
+{
+  "name": "post-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "start": "node index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csvdata": "^1.7.0",
+    "express": "^4.16.3"
+  }
+}
