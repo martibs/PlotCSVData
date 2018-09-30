@@ -1,36 +1,188 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset='utf-8'>  
+    <title>Registration Form</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!--    <link rel="stylesheet" type="text/css" href="style.css"> -->
+
+<!--    <script src="index.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <link rel='stylesheet' href='style2.css'>
-  </head>
-  <body>
-  	<header>
-  		<h1>Scatter Plot Matrix</h1>
-  	</header>
-    <!--<input type="file" id="upload"></input>-->
-    <article>
-      
+    <!-- <script src="validation.js" type="text/javascript"></script> -->
+<script>
+
+$(document).ready(function(){
+  var user,pass,email;
+  $("#submit").click(function(){
+    user=$("#user").val();
+    pass=$("#password").val();
+    email=$("#email").val();
+    if(!validate()){
+      return;
+    }
+    $.post("/login",{user: user, password: pass, email: email}, function(data){
+      if(data==='done')
+        {
+          alert("login success");
+        }
+    });
+  });
+});
+</script>
+
+<script>
+//actual handler
+$("#submitbutton").on("click", function(){
+
+    //arguments
+    var myheader = $("#header").val() == "true";
+    var myfile = $("#csvfile")[0].files[0];
+        
+    if(!myfile){
+        alert("No file selected.");
+        return;
+    }
+
+    //disable the button during upload
+    $("#submitbutton").attr("disabled", "disabled");
+
+    //perform the request
+    var req = ocpu.call("read.csv", {
+        "file" : myfile,
+        "header" : myheader
+    }, function(session){
+        session.getConsole(function(outtxt){
+            $("#output").text(outtxt); 
+        });
+    });
+        
+    //if R returns an error, alert the error message
+    req.fail(function(){
+        alert("Server error: " + req.responseText);
+    });
     
-    <script type='text/javascript' src='script2.js'></script>
-    <p>Enter a CSV url: </p>
-    <input type="text" id="url" name="textbox"/>
+    //after request complete, re-enable the button 
+    req.always(function(){
+        $("#submitbutton").removeAttr("disabled")
+    });        
+});    
 
-    <script>
-      function readUrl(){
-        var url = document.getElementById("url").value;
-        loadShit(url);
-      }
-    </script>
 
-    <button id="Load" onclick="readUrl()">Load CSV file</button>
-    <div id="body" align="center"></div>
-    <div id="span" align="center"></div>
-    <div id="var" align="center"></div>
-    <div id="svg" align="center"></div>
 
-    </article>
-  </body>
+</script>
+
+
+<style type="text/css">
+    body{
+        color: #fff;
+        background: #677356;
+        font-family: 'Roboto', sans-serif;
+    }
+    .form-control{
+        height: 40px;
+        box-shadow: none;
+        color: #969fa4;
+    }
+    .form-control:focus{
+        border-color: #5cb85c;
+    }
+    .form-control, .btn{        
+        border-radius: 3px;
+    }
+    .signup-form{
+        width: 400px;
+        margin: 0 auto;
+        padding: 30px 0;
+    }
+    .signup-form h2{
+        color: #636363;
+        margin: 0 0 15px;
+        position: relative;
+        text-align: center;
+    }
+    .signup-form h2:before, .signup-form h2:after{
+        content: "";
+        height: 2px;
+        width: 30%;
+        background: #d4d4d4;
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+    }   
+    .signup-form h2:before{
+        left: 0;
+    }
+    .signup-form h2:after{
+        right: 0;
+    }
+    .signup-form .hint-text{
+        color: #999;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .signup-form form{
+        color: #999;
+        border-radius: 3px;
+        margin-bottom: 15px;
+        background: #f2f3f7;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+    }
+    .signup-form .form-group{
+        margin-bottom: 20px;
+    }
+    .signup-form input[type="checkbox"]{
+        margin-top: 3px;
+    }
+    .signup-form .btn{        
+        font-size: 16px;
+        font-weight: bold;      
+        min-width: 140px;
+        outline: none !important;
+    }
+    .signup-form .row div:first-child{
+        padding-right: 10px;
+    }
+    .signup-form .row div:last-child{
+        padding-left: 10px;
+    }       
+    .signup-form a{
+        color: #fff;
+        text-decoration: underline;
+    }
+    .signup-form a:hover{
+        text-decoration: none;
+    }
+    .signup-form form a{
+        color: #5cb85c;
+        text-decoration: none;
+    }   
+    .signup-form form a:hover{
+        text-decoration: underline;
+    }  
+</style>
+
+  </head>
+<body>
+
+<h1>Upload csv files!</h1>
+<p>This site allows you to choose the csvdata to upload and displays it for you in different visualizations.</p>
+
+<b>CSV File</b> <input type="file" id="csvfile"> 
+<br />
+
+<b>Header</b> <select id="header">
+<option>true</option>
+<option>false</option>
+</select> 
+
+<br />
+<button id="submitbutton" type="button">read.csv</button>
+
+<pre><code id="output"></code></pre>
+
+</body>
+
+
 </html>

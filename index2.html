@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <link rel='stylesheet' href='style2.css'>
+  </head>
+  <body>
+  	<header>
+  		<h1>Scatter Plot Matrix</h1>
+  	</header>
+    <!--<input type="file" id="upload"></input>-->
+    <article>
+      
+    
+    <script type='text/javascript' src='script2.js'></script>
+    <p>Enter a CSV url: </p>
+    <input type="text" id="url" name="textbox"/>
+
+    <script>
+      function readUrl(){
+        var url = document.getElementById("url").value;
+        loadShit(url);
+      }
+    </script>
+
+    <button id="Load" onclick="readUrl()">Load CSV file</button>
+    <div id="body" align="center"></div>
+    <div id="span" align="center"></div>
+    <div id="var" align="center"></div>
+    <div id="svg" align="center"></div>
+
+    </article>
+  </body>
+</html>
